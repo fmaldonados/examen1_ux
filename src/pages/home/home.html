@@ -1,14 +1,46 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
+  <ion-item class="nav">
+    <h1 class="title" *ngIf="!afAuth.authState | async">
+      Examen UX
+    </h1>
+
+    <ion-avatar *ngIf="afAuth.authState | async" item-start>
+      <img src={{currentUser.photoURL}}>
+    </ion-avatar>
+    <h1 *ngIf="afAuth.authState | async as user" class="title" item-start>{{ user.displayName }}</h1>
+
+    <button *ngIf="afAuth.authState | async; else showLogin" ion-button item-end color="primary" (click)="logout()">Logout</button>
+    <ng-template #showLogin>
+      <button ion-button item-end (click)="login()">
+        iniciar sesion
+      </button>
+    </ng-template>
+  </ion-item>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <div *ngIf="afAuth.authState | async as user">
+    <ion-item>
+      <ion-card item-start class="card" *ngFor="let message of messages | async">
+        <ion-card-header>
+          <ion-avatar *ngIf="afAuth.authState | async" item-start>
+            <img src={{currentUser.photoURL}}>
+          </ion-avatar>
+          <h1 *ngIf="afAuth.authState | async as user" item-start>{{ user.displayName }}</h1>
+        </ion-card-header>
+        <ion-card-content>
+          <p>
+            {{message.message}}
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+    <ion-fab right bottom>
+      <button ion-fab (click)="selectMessageType()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
+
+  </div>
+
 </ion-content>
