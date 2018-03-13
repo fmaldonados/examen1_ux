@@ -20,21 +20,34 @@
 
 <ion-content padding>
   <div *ngIf="afAuth.authState | async as user">
-    <ion-item>
-      <ion-card item-start class="card" *ngFor="let message of messages | async">
-        <ion-card-header>
-          <ion-avatar *ngIf="afAuth.authState | async" item-start>
-            <img src={{currentUser.photoURL}}>
+    <div *ngFor="let message of messages | async">
+
+      <ion-card class="cardSize" *ngIf="verMensaje(message)" >
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="{{message.photo}}">
           </ion-avatar>
-          <h1 *ngIf="afAuth.authState | async as user" item-start>{{ user.displayName }}</h1>
-        </ion-card-header>
+          <h2>{{message.name}}</h2>
+          <ion-col *ngIf="(message.uid).localeCompare(currentUser.uid)" item-end>
+            <button ion-button clear>
+              <ion-icon name="md-add-circle"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-item>
+
         <ion-card-content>
-          <p>
-            {{message.message}}
-          </p>
+          <p>{{message.message}}</p>
         </ion-card-content>
+
+        <ion-row left bottom>
+          <ion-col left bottom>
+            <button ion-button icon-left clear small (click)="like(message)">
+              <ion-icon name="thumbs-up" class="likeOff"> {{message.likes}}</ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
       </ion-card>
-    </ion-item>
+    </div>
     <ion-fab right bottom>
       <button ion-fab (click)="selectMessageType()">
         <ion-icon name="add"></ion-icon>
