@@ -188,6 +188,11 @@ export class HomePage {
         }
       });
     }
+    if (message.type=='privado') {
+      if (message.uid == this.currentUser.uid) {
+        render = true;
+      }
+    }
     return render;
   }
   like(message) {
