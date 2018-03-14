@@ -29,8 +29,11 @@
           </ion-avatar>
           <h2>{{message.name}}</h2>
           <ion-col *ngIf="(message.uid).localeCompare(currentUser.uid)" item-end>
-            <button ion-button clear>
-              <ion-icon name="md-add-circle"></ion-icon>
+            <button *ngIf="isFollower(message)" ion-button clear (click)="follow(message)" >
+              <ion-icon class="likeOff" name="md-add-circle"></ion-icon>
+            </button>
+            <button *ngIf="!isFollower(message)" ion-button clear (click)="unfollow(message)" >
+              <ion-icon class="likeOn" name="md-add-circle"></ion-icon>
             </button>
           </ion-col>
         </ion-item>

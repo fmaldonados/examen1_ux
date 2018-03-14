@@ -251,4 +251,59 @@ export class HomePage {
       }
     }
   }
+  follow(message) {
+    var childData
+    firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        // key
+        var key = childSnapshot.key;
+        // value, could be object
+        childData = childSnapshot.val();
+        return true;
+        // Do what you want with these key/values here
+      });
+      (childData.following).push(message.uid);
+      console.log(childData);
+    });
+    this.usersRef.update(childData.userId, childData);
+  }
+  isFollower(message){
+    var childData
+    firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        // key
+        var key = childSnapshot.key;
+        // value, could be object
+        childData = childSnapshot.val();
+        return true;
+        // Do what you want with these key/values here
+      });
+    });
+    console.log(childData);
+    if (childData) {
+      if ((childData.following).indexOf(message.uid) > -1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  unfollow(message) {
+    var childData
+    firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        // key
+        var key = childSnapshot.key;
+        // value, could be object
+        childData = childSnapshot.val();
+        return true;
+        // Do what you want with these key/values here
+      });
+      console.log(childData);
+      delete childData.following[childData.following.indexOf(message.uid)];
+      console.log(childData);
+
+    });
+    this.usersRef.update(childData.userId, childData);
+  }
 }
