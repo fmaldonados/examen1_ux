@@ -137,7 +137,7 @@ export class HomePage {
     prompt.present();
   }
 
-  
+
 
   login() {
     this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
@@ -152,7 +152,7 @@ export class HomePage {
             displayName: response.user.displayName,
             photoURL: response.user.photoURL,
             following: [""],
-            favs:[""]
+            favs: [""]
           });
         //userRef.push({userId: xx.user.uid, displayName: xx.user.displayName}).then((xx)=>{
 
@@ -170,6 +170,9 @@ export class HomePage {
   verMensaje(message) {
     var render = false;
     if (message.type == "publico") {
+      render=true;
+    }
+    if (message.type == "amigos") {
       var childData
       firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
@@ -181,13 +184,13 @@ export class HomePage {
           // Do what you want with these key/values here
         });
         if ((childData.following).indexOf(message.uid) > -1 || childData.userId == message.uid) {
-          render=true;
+          render = true;
         }
       });
     }
     return render;
   }
-  like(message){
+  like(message) {
     var childData
     firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
       snapshot.forEach(function (childSnapshot) {
@@ -200,10 +203,52 @@ export class HomePage {
       });
       (childData.favs).push(message.id);
       console.log(childData);
-      
+
     });
-    message.likes+=1;
+    message.likes += 1;
     this.usersRef.update(childData.userId, childData);
     this.messagesRef.update(message.id, message);
+  }
+
+  unlike(message) {
+    var childData
+    firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        // key
+        var key = childSnapshot.key;
+        // value, could be object
+        childData = childSnapshot.val();
+        return true;
+        // Do what you want with these key/values here
+      });
+      console.log(childData);
+      delete childData.favs[childData.favs.indexOf(message.id)];
+      console.log(childData);
+
+    });
+    message.likes -= 1;
+    this.usersRef.update(childData.userId, childData);
+    this.messagesRef.update(message.id, message);
+  }
+  isFav(message) {
+    var childData
+    firebase.database().ref("/users").orderByChild("userId").equalTo(this.currentUser.uid).on("value", function (snapshot) {
+      snapshot.forEach(function (childSnapshot) {
+        // key
+        var key = childSnapshot.key;
+        // value, could be object
+        childData = childSnapshot.val();
+        return true;
+        // Do what you want with these key/values here
+      });
+    });
+    console.log(childData);
+    if (childData) {
+      if ((childData.favs).indexOf(message.id) > -1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
 }
