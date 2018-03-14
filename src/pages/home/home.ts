@@ -28,7 +28,7 @@ export class HomePage {
     public afDatabase: AngularFireDatabase,
     public afAuth: AngularFireAuth
   ) {
-    this.messagesRef = afDatabase.list('messages');
+    this.messagesRef = afDatabase.list('messages', ref => ref.orderByChild('likes'));
     this.messages = this.messagesRef.valueChanges();
 
     this.usersRef = afDatabase.list('users');
@@ -210,7 +210,7 @@ export class HomePage {
       console.log(childData);
 
     });
-    message.likes += 1;
+    message.likes -= 1;
     this.usersRef.update(childData.userId, childData);
     this.messagesRef.update(message.id, message);
   }
@@ -231,7 +231,7 @@ export class HomePage {
       console.log(childData);
 
     });
-    message.likes -= 1;
+    message.likes += 1;
     this.usersRef.update(childData.userId, childData);
     this.messagesRef.update(message.id, message);
   }

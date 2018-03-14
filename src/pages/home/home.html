@@ -45,11 +45,11 @@
         <ion-row  left bottom>
           <ion-col left bottom>
             <button  *ngIf="isFav(message)" ion-button icon-left clear small (click)="like(message)">
-              <ion-icon name="thumbs-up" class="likeOff"> {{message.likes}}</ion-icon>
+              <ion-icon name="thumbs-up" class="likeOff"> {{message.likes*-1}}</ion-icon>
             </button>
             
             <button  *ngIf="!isFav(message)" ion-button icon-left clear small (click)="unlike(message)">
-              <ion-icon name="thumbs-up" class="likeOn"> {{message.likes}}</ion-icon>
+              <ion-icon name="thumbs-up" class="likeOn"> {{message.likes*-1}}</ion-icon>
             </button>
           </ion-col>
         </ion-row>
